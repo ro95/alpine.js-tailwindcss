@@ -14,6 +14,10 @@
 
   <title>Rwhite</title>
   <style>
+    [x-cloak] {
+      display: none;
+    }
+
     :root {
       --primary: rgb(88, 40, 244);
       --primary-hover: rgb(69, 29, 200);
@@ -26,6 +30,59 @@
       font-weight: bold;
       margin-bottom: 1rem;
       font-family: 'lobster';
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: bold;
+      line-height: 2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .font1 {
+      font-family: var(--font1);
+    }
+
+    .hoverlist>* {
+
+      /* Replace @apply with equivalent Tailwind classes */
+      &:hover {
+        background-color: #f5f5f5;
+        /* hover:bg-gray-100 */
+        border-radius: 0.375rem;
+        /* rounded-md */
+        transition: all 150ms;
+        /* transition duration-150 */
+      }
+    }
+
+    .hoverlist>*>a {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem;
+    }
+
+    .highlight {
+      background-color: rgb(224, 231, 255) !important;
+      /* Equivalent to bg-indigo-100 */
+    }
+
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+    .titleBlip {
+      animation: 1s fadeIn;
     }
 
     .button {
@@ -70,23 +127,54 @@
 
 </head>
 
-<body>
-  <header class="flex items-center bg-gray-800 h-20 text-white justify-between px-8  sticky top-0 z-50">
+<body class="bg-gray-100">
 
-    <logo><a class="flex items-center gap-1" href="">
-        <img class="h-8 -mt-1" src="https://img.icons8.com/small/64/ffffff/fire-heart.png" />
-        <span>Rwhite</span></a></logo>
-    <nav>
-      <ul class="flex items-center[&>li>a]:p-4 [&>li>a:hover]:bg-gray-700 [&>li>a]:rounded-lg">
-        <li><a class="p-4" href="#home">Home</a></li>
-        <li><a class="p-4" href="#post">Create post</a></li>
-        <li><a class="flex items-center gap-2" href=""><img class="h-8 rounded-full object-cover bg-teal-200"
+  <header x-data="{ mobilenavOpen: false }"
+    class="md:flex items-center justify-between [&>*]:px-8 bg-gray-800 h-20 text-white sticky top-0 z-50">
+    <div class="flex items-center justify-between h-20">
+      <logo>
+        <a class="flex items-center gap-1" href="">
+          <img class="h-8 -mt-1" src="https://img.icons8.com/small/64/ffffff/fire-heart.png" />
+          <span class="text-lg font-bold">Awesome</span>
+        </a>
+      </logo>
+      <mobileicon class="md:hidden">
+        <a @click="mobilenavOpen = !mobilenavOpen"
+          class="h-12 w-12 flex items-center justify-center cursor-pointer hover:bg-gray-700 rounded-lg">
+          <img x-show="!mobilenavOpen" class="w-6 h-6 select-none"
+            src="https://img.icons8.com/small/64/ffffff/menu.png" />
+          <img x-show="mobilenavOpen" x-cloak class="w-6 h-6 select-none"
+            src="https://img.icons8.com/small/64/ffffff/delete-sign.png" />
+        </a>
+      </mobileicon>
+    </div>
+    <nav x-show="mobilenavOpen" x-cloak
+      class="md:!block bg-gray-800 h-screen w-screen md:h-auto md:w-auto -mt-20 md:mt-0 absolute md:relative z-[-1]"
+      x-transition:enter="duration-300 ease-out" x-transition:enter-start="opacity-0 -translate-y-96"
+      x-transition:enter-end="opacity-100 translate-y-0">
+      <ul
+        class="flex items-center navitems flex-col md:flex-row gap-8 md:gap-0 justify-center h-full -translate-y-10 md:translate-y-0">
+        <li><a href="">Home</a></li>
+        <li><a href="">Create Post</a></li>
+        <li x-data="{ dropdownOpen: false }" class="relative">
+          <a @click="dropdownOpen = !dropdownOpen" @click.away="dropdownOpen = false"
+            class="cursor-pointer select-none">
+            <img class="h-8 rounded-full object-cover bg-teal-200"
               src="https://img.icons8.com/doodle/96/null/bart-simpson.png" />
             Bart
             <img x-bind:class="dropdownOpen && 'rotate-180 duration-300'" class="w-4"
               src="https://img.icons8.com/small/32/777777/expand-arrow.png" />
-          </a></li>
-
+          </a>
+          <div x-show="dropdownOpen" x-cloak
+            class="absolute right-0 bg-white text-black shadow rounded-lg w-40 p-2 z-20"
+            x-transition:enter="duration-300 ease-out" x-transition:enter-start="opacity-0 -translate-y-5 scale-90"
+            x-transition:enter-end="opacity-100 translate-y-0 scale-100">
+            <ul class="hoverlist [&>li>a]:justify-end">
+              <li><a href="">My Profile</a></li>
+              <li><a href="">Log Out</a></li>
+            </ul>
+          </div>
+        </li>
       </ul>
     </nav>
   </header>
@@ -111,10 +199,96 @@
         <figure>
           <a href=""><img class="w-full" src="https://live.staticflickr.com/65535/50618365686_36f887ab88_c.jpg"></a>
         </figure>
+        <div class="p-4 pb-2">
+          <a class="flex items-center gap-1 mb-4" href="">
+            <img class="w-8 h-8 rounded-full" src="https://img.icons8.com/small/96/A9A9A9/happy.png">
+            <span class="font-bold hover:underline">Lisa</span>
+          </a>
+          <p class="text-5xl mb-10 px-4 font1">Jedi Kitty protects the street</p>
+          <div class="flex items-center gap-2 text-sm mb-5">
+            <a class="bg-gray-200 rounded-full px-3 py-1 hover:bg-gray-500 hover:text-white" href="">Animals</a>
+            <a class="bg-gray-200 rounded-full px-3 py-1 hover:bg-gray-500 hover:text-white" href="">Cute</a>
+          </div>
+          <div class="flex items-center justify-between text-sm px-2">
+            <a class="font-bold hover:underline" href="">Comments<span
+                class="font-light text-gray-500 ml-2">3</span></a>
+            <div class="flex items-center gap-4 [&>a:hover]:underline">
+              <div class="flex items-center gap-1">
+                <img class="w-5 -mt-1" src="https://img.icons8.com/small/24/000000/fire-heart.png">1
+              </div>
+              <a href="">Like</a>
+              <a href="">Edit</a>
+              <a href="">Delete</a>
+            </div>
+          </div>
+        </div>
       </article>
-
     </main>
-    <aside class="bg-red-200 mr-[20%]col-span-1">Sidebar</aside>
+    <aside class="mr-[20%]col-span-1">
+      <section class="card p-4">
+        <h2>Categories</h2>
+        <ul class="hoverlist">
+          <li class="highlight"><a href="">
+              <img class="w-8 h-8 object-cover mr-2" src="https://img.icons8.com/small/96/null/landscape.png">
+              <span class="font-bold text-sm">Landscape</span>
+            </a></li>
+          <li><a href="">
+              <img class="w-8 h-8 object-cover mr-2" src="https://img.icons8.com/small/96/null/portrait.png">
+              <span class="font-bold text-sm">People</span>
+            </a></li>
+          <li><a href="">
+              <img class="w-8 h-8 object-cover mr-2" src="https://img.icons8.com/small/96/null/dog.png">
+              <span class="font-bold text-sm">Animals</span>
+            </a></li>
+          <li><a href="">
+              <img class="w-8 h-8 object-cover mr-2" src="https://img.icons8.com/small/96/null/collage.png">
+              <span class="font-bold text-sm">Abstract</span>
+            </a></li>
+          <li><a href="">
+              <img class="w-8 h-8 object-cover mr-2" src="https://img.icons8.com/small/96/null/180-degrees.png">
+              <span class="font-bold text-sm">Black & White</span>
+            </a></li>
+        </ul>
+      </section>
+      <section class="card p-4">
+        <h2 class="">Top Photos</h2>
+        <ul class="hoverlist">
+          <li><a href="">
+              <img class="w-10 h-10 rounded-lg object-cover mr-3"
+                src="https://live.staticflickr.com/65535/50618365686_36f887ab88_c.jpg">
+              <img class="w-6 h-6 rounded-full object-cover mr-0.5"
+                src="https://img.icons8.com/small/96/A9A9A9/happy.png">
+              <span class="font-bold text-sm mr-1">Homer</span>
+              <span class="text-sm font-light text-grey-500">(5 Likes)</span>
+            </a></li>
+          <li><a href="">
+              <img class="w-10 h-10 rounded-lg object-cover mr-3"
+                src="https://live.staticflickr.com/65535/50618365686_36f887ab88_c.jpg">
+              <img class="w-6 h-6 rounded-full object-cover mr-0.5"
+                src="https://img.icons8.com/small/96/A9A9A9/happy.png">
+              <span class="font-bold text-sm mr-1">Homer</span>
+              <span class="text-sm font-light text-grey-500">(5 Likes)</span>
+            </a></li>
+        </ul>
+      </section>
+      <section class="card p-4">
+        <h2 class="">Top Captions</h2>
+        <ul class="hoverlist">
+          <li><a href="">
+              <img class="w-8 h-8 rounded-full object-cover mr-1"
+                src="https://img.icons8.com/small/96/A9A9A9/happy.png">
+              <span class="font-bold text-sm mr-1">Homer</span>
+              <span class="text-sm font-light text-grey-500">(5 Likes)</span>
+            </a></li>
+          <li><a href="">
+              <img class="w-8 h-8 rounded-full object-cover mr-1"
+                src="https://img.icons8.com/small/96/A9A9A9/happy.png">
+              <span class="font-bold text-sm mr-1">Homer</span>
+              <span class="text-sm font-light text-grey-500">(5 Likes)</span>
+            </a></li>
+        </ul>
+      </section>
+    </aside>
   </content>
 </body>
 
