@@ -43,6 +43,28 @@
       font-family: var(--font1);
     }
 
+    .navitems>li>a {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      /* gap-2 */
+      height: 3rem;
+      /* h-12 */
+      padding-left: 1rem;
+      /* px-4 */
+      padding-right: 1rem;
+      /* px-4 */
+      border-radius: 0.5rem;
+      /* rounded-lg */
+      transition: background-color 150ms;
+      /* hover:bg-gray-700 */
+    }
+
+    .navitems>li>a:hover {
+      background-color: #374151;
+      /* hover:bg-gray-700 */
+    }
+
     .hoverlist>* {
 
       /* Replace @apply with equivalent Tailwind classes */
@@ -187,9 +209,17 @@
       <a class="button" href="">Get Started</a>
     </div>
   </hero>
-  <content class="grid grid-cols-3 max-w-7xl mx-auto mt-6">
-    <main class="mx-[10%] col-span-2">
 
+  <content x-data="{ mobileSidebarOpen: false }" class="grid grid-cols-3 max-w-7xl mx-auto mt-6">
+    <mobileSidebarNav class="md:hidden col-span-full mx-auto mb-6 z-10 relative">
+      <a @click="mobileSidebarOpen = !mobileSidebarOpen"
+        class="flex items-center cursor-pointer select-none font-bold hover:bg-gray-200 rounded-lg p-3">
+        <span>Categories</span>
+        <img x-bind:class="mobileSidebarOpen && 'rotate-180 duration-300'" class="w-4 ml-1.5"
+          src="https://img.icons8.com/small/32/000000/expand-arrow.png" />
+      </a>
+    </mobileSidebarNav>
+    <main class="col-span-full md:col-span-2 mx-[5%] md:mx-[10%] order-2 md:order-1">
       <article class="card">
         <div class="flex items-center justify-between px-4 h-14">
           <h3 class="text-lg font-bold w-[50%] truncate">Little Jedi</h3>
@@ -224,7 +254,10 @@
         </div>
       </article>
     </main>
-    <aside class="mr-[20%]col-span-1">
+    <aside x-show="mobileSidebarOpen" x-cloak
+      class="md:!block col-span-full md:col-span-1 mx-[5%] md:mr-[20%] order-1 md:order-2"
+      x-transition:enter="duration-300 ease-out" x-transition:enter-start="opacity-0 -mt-96"
+      x-transition:enter-end="opacity-100 mt-0">
       <section class="card p-4">
         <h2>Categories</h2>
         <ul class="hoverlist">
@@ -290,6 +323,7 @@
       </section>
     </aside>
   </content>
+
 </body>
 
 </html>
